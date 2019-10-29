@@ -1,0 +1,34 @@
+version: "3.7"
+services:
+  nginx:
+    image: greml1n/nginx:otus-hw-1.2
+    container_name: nginx
+    depends_on:
+      - php
+    volumes:
+      - ./info.php:/var/www/html/info.php
+    links:
+      - php
+    ports:
+      - "8000:80"
+    networks:
+      front:
+        ipv4_address: 10.20.30.10
+        aliases:
+          - nginx
+  php:
+    image: greml1n/php:otus-hw-1.2
+    container_name: php
+    volumes:
+      - ./info.php:/var/www/html/info.php
+    networks:
+      front:
+        ipv4_address: 10.20.30.20
+        aliases:
+          - php
+networks:
+  front:
+    ipam:
+      driver: "default"
+      config:
+        - subnet: "10.20.30.0/24"
